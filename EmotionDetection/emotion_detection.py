@@ -41,5 +41,14 @@ def emotion_detector(text_to_analyze):
             print(f"'{key}': {value}")
         print('}')
         return res_dict
+    elif response.status_code == 400:
+        res_dict = {}
+        res_dict['anger'] = None
+        res_dict['disgust'] =  None
+        res_dict['fear'] =  None
+        res_dict['joy'] =  None
+        res_dict['sadness'] =  None
+        res_dict['dominant_emotion'] = None
+        return res_dict
     else:
         return "Something went wrong. Status Code: " + str(response.status_code)
