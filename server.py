@@ -1,4 +1,5 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
+from EmotionDetection.emotion_detection import emotion_detector
 
 app = Flask(__name__)
 
@@ -8,8 +9,16 @@ def index():
 
 @app.route('/emotionDetector')
 def emotion_detection_fun():
-    return "Hello world!"
-
+    ''' This functions retrieves the parameter from website and calls emotion_detection function
+    The output is formatted in text form.
+    '''
+    text_to_analyze = request.args.get('textToAnalyze')
+    res = emotion_detector(text_to_analyze)
+    out_str = ("For the given statement, the system response is 'anger': " + str(res['anger']) 
+    + ", 'disgust': "  + str(res['disgust']) + ", 'fear': " + str(res['fear']) 
+    + ", 'joy': " + str(res['joy']) + "and 'sadness': " + str(res['sadness']) 
+    + ". The dominant emotion is " + str(res['dominant_emotion']) + ".")
+    return out_str
 
 if __name__ == "__main__":
     ''' This functions executes the flask app and deploys it on localhost:5000

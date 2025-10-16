@@ -32,13 +32,14 @@ def emotion_detector(text_to_analyze):
         #having the index we can extract now the corresponding dominant_key
         key_list = list(res_dict.keys())
         dominant_key = key_list[dominant_index]
+        # add dominant emotion to dict
+        res_dict['dominant_emotion'] = dominant_key 
         ### output ###
         print('{')
         #iterate through the dictionary and print items for reqired output format
         for key, value in res_dict.items():
             print(f"'{key}': {value}")
-        #print dominant key
-        print(f"'dominant_emotion': '{dominant_key}'")
         print('}')
+        return res_dict
     else:
         return "Something went wrong. Status Code: " + str(response.status_code)
