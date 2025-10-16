@@ -1,4 +1,5 @@
 import requests
+import json
 
 def emotion_detector(text_to_analyze):
     '''This function takes a text as an input and lets Watson NLP Library 
@@ -14,6 +15,30 @@ def emotion_detector(text_to_analyze):
     response = requests.post(URL, headers = HEADERS, json = INPUT_JSON)
     #check if request was succesful
     if response.status_code == 200:
-        return response.text
+        #if request succesful convert response.text in json file
+        formatted_response = json.loads(response.text)
+        #Retrieve emotions with respective scores in dictionary
+        res_dict = {}
+        res_dict['anger'] = formatted_response['emotionPredictions'][0]['emotion']['anger']
+        res_dict['disgust'] =  formatted_response['emotionPredictions'][0]['emotion']['disgust']
+        res_dict['fear'] =  formatted_response['emotionPredictions'][0]['emotion']['fear']
+        res_dict['joy'] =  formatted_response['emotionPredictions'][0]['emotion']['joy']
+        res_dict['sadness'] =  formatted_response['emotionPredictions'][0]['emotion']['sadness']
+        ### find dominant emotion ###
+        #convert scores to list and get the highest score and index
+        score_list = list(res_dict.values())
+        dominant_score = max(score_list)
+        dominant_index = score_list.index(dominant_score)
+        #having the index we can extract now the corresponding dominant_key
+        key_list = list(res_dict.keys())
+        dominant_key = key_list[dominant_index]
+        ### output ###
+        print('{')
+        #iterate through the dictionary and print items for reqired output format
+        for key, value in res_dict.items():
+            print(f"'{key}': {value}")
+        #print dominant key
+        print(f"'dominant_emotion': '{dominant_key}'")
+        print('}')
     else:
         return "Something went wrong. Status Code: " + str(response.status_code)
